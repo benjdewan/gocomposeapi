@@ -64,6 +64,7 @@ func NewClient(apiToken string) (*Client, error) {
 			http.StatusBadGateway,
 			http.StatusServiceUnavailable,
 			http.StatusGatewayTimeout,
+			http.StatusInternalServerError,
 		},
 	}, nil
 }
