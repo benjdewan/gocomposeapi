@@ -47,6 +47,7 @@ type Client struct {
 	apiToken      string
 	logger        *log.Logger
 	enableLogging bool
+	enableCurl    bool
 }
 
 // NewClient returns a Client for further interaction with the API
@@ -66,11 +67,13 @@ func NewClient(apiToken string) (*Client, error) {
 	}, nil
 }
 
-// SetLogger can enable or disable http logging to and from the Compose
-// API endpoint using the provided io.Writer for the provided client.
-func (c *Client) SetLogger(enableLogging bool, logger io.Writer) *Client {
+// SetLogger can enable or disable http logging of requests and responses
+// to and from the Compose API endpoint and/or recording runnable Curl
+// commands of all the Compose API requests to the provided io.Writer.
+func (c *Client) SetLogger(enableLogging, enableCurl bool, logger io.Writer) *Client {
 	c.logger = log.New(logger, "[composeapi]", log.LstdFlags)
 	c.enableLogging = enableLogging
+	c.enableCurl = enableCurl
 	return c
 }
 
@@ -81,6 +84,7 @@ func (c *Client) newRequest(method, targetURL string) *gorequest.SuperAgent {
 		Set("Content-type", "application/json; charset=utf-8").
 		SetLogger(c.logger).
 		SetDebug(c.enableLogging).
+		SetCurlCommand(c.enableCurl).
 		Retry(c.Retries, c.RetryInterval, c.RetryStatusCodes...)
 }
 
