@@ -126,7 +126,10 @@ func (c *Client) SetAPIToken(newtoken string) {
 func (c *Client) getJSON(endpoint string) (string, []error) {
 	response, body, errs := c.newRequest("GET", apibase+endpoint).End()
 	if response == nil {
-		return internalError(errs)
+		response, body, errs = c.newRequest("GET", apibase+endpoint).End()
+		if response == nil {
+			return internalError(errs)
+		}
 	}
 
 	if response.StatusCode != 200 {
