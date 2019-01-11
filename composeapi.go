@@ -56,7 +56,7 @@ func NewClient(apiToken string) (*Client, error) {
 	return &Client{
 		apiToken:      apiToken,
 		logger:        log.New(ioutil.Discard, "", 0),
-		Retries:       5,
+		Retries:       10,
 		RetryInterval: 3 * time.Second,
 		RetryStatusCodes: []int{
 			http.StatusRequestTimeout,
